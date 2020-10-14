@@ -1,38 +1,63 @@
 import React from 'react';
 
-import whatsappIcon from '../../assets/images/icons/whatsapp.svg';
-
 import './styles.css';
 
-const TeacherItem: React.FC = ()=> {
-  return(
+import whastappIcon from '../../assets/images/icons/whatsapp.svg';
+import api from '../../services/api';
+
+export interface Teacher {
+  avatar: string;
+  bio: string;
+  cost: number;
+  id: number;
+  name: string;
+  subject: string;
+  whatsapp: number;
+}
+
+interface TeacherItemProps {
+  teacher: Teacher;
+}
+
+const TeacherItem: React.FC<TeacherItemProps> = ({ teacher }: TeacherItemProps) => {
+  function createNewConnection() {
+    api.post('connections', { 
+      user_id: teacher.id, 
+    });
+  }
+  
+  return (
     <article className="teacher-item">
       <header>
-        <img src="https://avatars1.githubusercontent.com/u/37229572?s=460&u=c582816450d7548ede93d47f6c9affddf0aa2bdc&v=4" alt="Leo Schlanger"/>
+        <img src={teacher.avatar} alt={teacher.name} />
         <div>
-          <strong>Leo Schlanger</strong>
-          <span>Matemática</span>
+          <strong>{teacher.name}</strong>
+          <span>{teacher.subject}</span>
         </div>
       </header>
-
       <p>
-        Mestre da Matemática
-        <br /><br />
-        Conhece várias técnicas e matemática
+        {teacher.bio}
       </p>
-
       <footer>
         <p>
           Preço/hora
-          <strong>R$ 90,00</strong>
+          <strong>
+            R$
+            {teacher.cost}
+          </strong>
         </p>
-        <button type="button">
-          <img src={whatsappIcon} alt="WhatsApp"/>
+        <a 
+          target="_blank" 
+          onClick={createNewConnection} 
+          href={`https://wa.me/${teacher.whatsapp}`} 
+          type="button"
+        >
+          <img src={whastappIcon} alt="Whatsapp" />
           Entrar em contato
-        </button>
+        </a>
       </footer>
     </article>
   );
-} 
+}
 
 export default TeacherItem;
